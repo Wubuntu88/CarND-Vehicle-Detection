@@ -47,4 +47,5 @@ t2 = time.time()
 print(round(t2-t, 5), 'Seconds to predict', n_predict, 'labels with SVC')
 
 joblib.dump(svc, '../saved_models/svc_rgb_all.pkl')
+joblib.dump(x_scaler, '../saved_models/x_scaler_rgb_all.pkl')
 
