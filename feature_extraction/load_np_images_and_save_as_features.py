@@ -6,8 +6,8 @@ import time
 
 
 vehicles_array, non_vehicles_array = \
-    tdl.load_training_data(car_images_file_path='../../matrix_image_data/vehicle_images_matrix.npy',
-                           non_car_images_file_path='../../matrix_image_data/non_vehicle_images_matrix.npy')
+    tdl.load_training_data(car_images_file_path='../matrix_image_data/vehicle_images_matrix.npy',
+                           non_car_images_file_path='../matrix_image_data/non_vehicle_images_matrix.npy')
 
 before = time.time()
 
@@ -18,6 +18,6 @@ after = time.time()
 
 print('time: ', (after - before))
 
-np.save(file='../../saved_features/rgb_all/car_features.npy', arr=car_features)
-np.save(file='../../saved_features/rgb_all/non_car_features.npy', arr=non_car_features)
+np.save(file='../saved_features/rgb_all/car_features.npy', arr=car_features)
+np.save(file='../saved_features/rgb_all/non_car_features.npy', arr=non_car_features)
 

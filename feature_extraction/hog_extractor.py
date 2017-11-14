@@ -4,7 +4,12 @@ import numpy as np
 
 def get_hog_features(multi_channel_img, num_orientations=9,
                      pix_per_cell=8, cell_per_block=2, is_feature_vector=True):
-    # Call with two outputs if vis==True
+    """
+    This method takes a multichannel image as input.
+     It loops through the each channel, and extracts the hog features for that channel.
+     It then assembles the hog features as a feature vector by the ravel method.
+    :return: np.array of features
+    """
     hog_channel_list = []
     for channel_index in range(0, multi_channel_img.shape[2]):
         single_channel = multi_channel_img[:, :, channel_index]
