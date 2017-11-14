@@ -12,7 +12,7 @@ img = vehicles_array[0]
 big_data = he.get_hog_features(multi_channel_img=img)
 print(big_data.shape)
 
-features, hog_image = he.get_single_channel_hog_features_and_images(img=img[:, :, 0])
+features, hog_image = he.get_single_channel_hog_features_and_images(img=img[:, :, 0], vis=True)
 print(features.shape)
 
 plt.imshow(img)
