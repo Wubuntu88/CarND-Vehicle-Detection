@@ -3,8 +3,8 @@ import math
 
 
 class History:
-    def __init__(self, n_frames: int = 5, match_threshold: int = 3, distance_threshold: float = 150.0):
-        # self.heat_maps = []
+    def __init__(self, n_frames: int = 8, match_threshold: int = 3, distance_threshold: float = 150.0):
+        self.heat_maps = []
         # self.label_boxes = []
         self.last_n_centroids = []  # list of lists of floats
         self.index_to_replace = 0
@@ -12,13 +12,19 @@ class History:
         self.match_threshold = match_threshold
         self.distance_threshold = distance_threshold
 
-    # def add_or_replace_heat_map(self, heat_map):
-    #     if len(self.heat_maps) <= self.n_frames:
-    #         self.heat_maps.append(heat_map)
-    #     else:
-    #         self.heat_maps[self.index_to_replace] = heat_map
-    #     self.index_to_replace = (self.index_to_replace + 1) % self.n_frames
-    #
+    def add_or_replace_heat_map(self, heat_map):
+        if len(self.heat_maps) <= self.n_frames:
+            self.heat_maps.append(heat_map)
+        else:
+            self.heat_maps[self.index_to_replace] = heat_map
+        self.index_to_replace = (self.index_to_replace + 1) % self.n_frames
+
+    def averaged_heatmap(self):
+        if len(self.heat_maps) <= 0:
+            return None
+        else:
+            return sum(self.heat_maps) / len(self.heat_maps)
+
     # def add_or_replace_label_box(self, label_box):
     #     if len(self.heat_maps) <= self.n_frames:
     #         self.heat_maps.append(label_box)
