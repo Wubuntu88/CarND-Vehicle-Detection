@@ -24,6 +24,11 @@ The goals / steps of this project are the following:
 [image7]: ./examples/output_bboxes.png
 [video1]: ./project_video.mp4
 
+[rgb_img_test1]: ./test_images/test1.jpg
+[img_hog_feat_red_ch_test1]: ./output_images/hog_images/red_channel_hog_test1.png
+[img_hog_feat_green_ch_test1]: ./output_images/hog_images/green_channel_hog_test1.png
+[img_hog_feat_blue_ch_test1]: ./output_images/hog_images/blue_channel_hog_test1.png
+
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
@@ -70,7 +75,13 @@ I thought these would be satisfactory, so I chose to go with the RGB channels an
 
 By visualizing the hog features of an image, we can see that the RGB channels do give us outlines of the cars.
 
+|Original test1.jpg | Hog features Red Channels test1.jpg |
+|:-------------------------:|:-------------------------:|
+|![rgb_img_test1] | ![img_hog_feat_red_ch_test1]|
 
+|Hog features Green Channels | Hog features Blue Channels |
+|:-------------------------:|:-------------------------:|
+|![img_hog_feat_green_ch_test1] | ![img_hog_feat_blue_ch_test1]|
 
 ####2. Explain how you settled on your final choice of HOG parameters.
 
