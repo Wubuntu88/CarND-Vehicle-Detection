@@ -29,6 +29,11 @@ The goals / steps of this project are the following:
 [img_hog_feat_green_ch_test1]: ./output_images/hog_images/green_channel_hog_test1.png
 [img_hog_feat_blue_ch_test1]: ./output_images/hog_images/blue_channel_hog_test1.png
 
+[static_detect_test1]: ./output_images/static_car_detections/test1.png
+[static_detect_test3]: ./output_images/static_car_detections/test3.png
+[static_detect_test5]: ./output_images/static_car_detections/test5.png
+[static_detect_test6]: ./output_images/static_car_detections/test6.png
+
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
@@ -97,21 +102,61 @@ Creating more orientations would most likely achieve diminishing returns.
 
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a linear SVM using...
+I trained a linear SVM using the default parameters in sklearn (C = 1.0).
+I trained on both the GIT and KTTI image data.
+This yielded an accuracy of around 99%.
+Because the accuracy was so good, I ended up keeping the first classifier I trained.
+
+I used the following features to train my classifier:
+* Raw colors in the pixels as a 1-d feature vector (in feature_extraction/color_spatial.py)
+* RGB color histograms (in feature_extraction/color_histogram.py - I used the rgb method).
+* HOG features (in feature_extraction/hog_extractor.py).
 
 ###Sliding Window Search
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+I used the first set of code from Udacity to implement my sliding window search.
+It is located in the windowing/windower.py file.
+I used the slide_window() to find all of my windows, then the search windows and decide if there is a car in that window.
 
-![alt text][image3]
+I decided on several window sizes: (64x64), (96x96), and (128x128).
+For the above window sizes, I chose the following configurations:
+###### (64x64)
+- I chose y_start=400 and ystop=464.  
+This means that there was only one row of small windows and that was just below the horizon where one would imagine small cars to be.
+I restricted the small windows to this area because the small windows were triggering too many false positives when allowed to creep to far down into the frame.
+- I chose and overlap of 0.5.  I chose this small overlap because a high overlap made the video generation take too long.
+- Occasionally, I would omit these windows in my video generation because they made my code run too long.
+
+###### (96x96)
+- I chose y_start=400 and y_stop=592.
+I wanted it to start at the horizon to capture cars at the horizon, even if they are smaller than the bounding box.
+I chose to stop at 592 because that seemed like a reasonable limit where a  medium scaled car would be.
+-I chose a 0.75 overlap because with a larger size window, I thought I could afford the extra overlap, and I wanted as many windows as was reasonable.
+
+###### (128x128)
+- I chose y_start=400 and y_stop=650.
+I chose it to start at the horizon to capture as many cars as possible.
+I chose it to stop at 650 so that it would stop just shy of the hood of the car.
+-I chose a 0.75 overlap.  Like in the (96x96) example, I wanted as many windows as was reasonable.
+With the large window size, I though I could afford the high overlap.
+
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Here are some images of my pipeline locating cars in an image: (Note, I use filtering techniques that use several previous frames for )
 
-![alt text][image4]
+##### Car detection without filtering
+
+| test1.jpg | test3.jpg |
+|:-------------------------:|:-------------------------:|
+|![static_detect_test1] | ![static_detect_test]|
+
+|test5.jpg | test6.jpg |
+|:-------------------------:|:-------------------------:|
+|![static_detect_test5] | ![static_detect_test6]|
+
 ---
 
 ### Video Implementation
@@ -122,7 +167,11 @@ Here's a [link to my video result](./project_video.mp4)
 
 ####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
-I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
+I recorded the positions of positive detections in each frame of the video.
+From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.
+I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.
+I then assumed each blob corresponded to a vehicle.
+I constructed bounding boxes to cover the area of each blob detected.  
 
 Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
 
