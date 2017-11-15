@@ -80,13 +80,21 @@ I thought these would be satisfactory, so I chose to go with the RGB channels an
 
 By visualizing the hog features of an image, we can see that the RGB channels do give us outlines of the cars.
 
-|Original test1.jpg | Hog features Red Channels test1.jpg |
-|:-------------------------:|:-------------------------:|
-|![rgb_img_test1] | ![img_hog_feat_red_ch_test1]|
+| Original test1.jpg |
+|:-------------------------:|
+|![rgb_img_test1] |
 
-|Hog features Green Channels | Hog features Blue Channels |
-|:-------------------------:|:-------------------------:|
-|![img_hog_feat_green_ch_test1] | ![img_hog_feat_blue_ch_test1]|
+| Hog features Red Channels test1.jpg |
+|:-------------------------:|
+| ![img_hog_feat_red_ch_test1]|
+
+| Hog features Green Channels |
+|:-------------------------:|
+| ![img_hog_feat_green_ch_test1]|
+
+| Hog features Blue Channels |
+|:-------------------------:|
+| ![img_hog_feat_blue_ch_test1]|
 
 #### 2. Explain how you settled on your final choice of HOG parameters.
 
