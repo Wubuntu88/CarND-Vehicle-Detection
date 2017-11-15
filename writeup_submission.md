@@ -1,5 +1,5 @@
-##Writeup Template
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
+## Writeup Template
+### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
 
 ---
 
@@ -35,18 +35,18 @@ The goals / steps of this project are the following:
 [static_detect_test6]: ./output_images/static_car_detections/test6.png
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
-###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
+### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
 ---
-###Writeup / README
+### Writeup / README
 
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  
+#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  
 
 This document is the writeup submission for project 5.
 
-###Histogram of Oriented Gradients (HOG)
+### Histogram of Oriented Gradients (HOG)
 
-####1. Explain how (and identify where in your code) you extracted HOG features from the training images.
+#### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
 The code for extracting the hog features is located in the feature_extraction/hog_extractor.py.
 
@@ -88,7 +88,7 @@ By visualizing the hog features of an image, we can see that the RGB channels do
 |:-------------------------:|:-------------------------:|
 |![img_hog_feat_green_ch_test1] | ![img_hog_feat_blue_ch_test1]|
 
-####2. Explain how you settled on your final choice of HOG parameters.
+#### 2. Explain how you settled on your final choice of HOG parameters.
 
 I chose the HOG parameters that were in the Udacity course. The parameters all are legitimate.
 
@@ -100,7 +100,7 @@ Here are my parameters:
 As for the number of orientations, I believe 9 yields enough granularity for the histogram of the gradients.
 Creating more orientations would most likely achieve diminishing returns.
 
-####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
+#### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
 I trained a linear SVM using the default parameters in sklearn (C = 1.0).
 I trained on both the GIT and KTTI image data.
@@ -112,9 +112,9 @@ I used the following features to train my classifier:
 * RGB color histograms (in feature_extraction/color_histogram.py - I used the rgb method).
 * HOG features (in feature_extraction/hog_extractor.py).
 
-###Sliding Window Search
+### Sliding Window Search
 
-####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+#### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
 I used the first set of code from Udacity to implement my sliding window search.
 It is located in the windowing/windower.py file.
@@ -143,7 +143,7 @@ I chose it to stop at 650 so that it would stop just shy of the hood of the car.
 With the large window size, I though I could afford the high overlap.
 
 
-####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+#### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
 Here are some images of my pipeline locating cars in an image: (Note, I use filtering techniques that use several previous frames for )
 
@@ -161,11 +161,11 @@ Here are some images of my pipeline locating cars in an image: (Note, I use filt
 
 ### Video Implementation
 
-####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
+#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
 Here's a [link to my video result](./project_video.mp4)
 
 
-####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
+#### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
 I recorded the positions of positive detections in each frame of the video.
 From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.
@@ -189,9 +189,9 @@ Here's an example result showing the heatmap from a series of frames of video, t
 
 ---
 
-###Discussion
+### Discussion
 
-####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
 
