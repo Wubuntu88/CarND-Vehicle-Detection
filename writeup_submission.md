@@ -34,6 +34,19 @@ The goals / steps of this project are the following:
 [static_detect_test5]: ./output_images/static_car_detections/test5.png
 [static_detect_test6]: ./output_images/static_car_detections/test6.png
 
+[sub_clip_0_5_car_classified_yes_confidence]: ./plots/project_video_subclip0-5_yes_predictions_confidence.png
+[sub_clip_0_5_car_classified_no_confidence]: ./plots/project_video_subclip0-5_no_predictions_confidence.png
+[sub_clip_7_15_car_classified_yes_confidence]: ./plots/project_video_subclip7-15_yes_predictions_confidence_crop.png
+[sub_clip_7_15_car_classified_no_confidence]: ./plots/project_video_subclip7-15_no_predictions_confidence_crop.png
+
+[rgb_img_test2]: ./test_images/test2.jpg
+[rgb_img_test3]: ./test_images/test3.jpg
+[rgb_img_test6]: ./test_images/test6.jpg
+
+[heat_map_img_test2]: ./output_images/heat_maps/test2.png
+[heat_map_img_test3]: ./output_images/heat_maps/test3.png
+[heat_map_img_test6]: ./output_images/heat_maps/test6.png
+
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
@@ -159,11 +172,61 @@ Here are some images of my pipeline locating cars in an image: (Note, I use filt
 
 | test1.jpg | test3.jpg |
 |:-------------------------:|:-------------------------:|
-|![static_detect_test1] | ![static_detect_test]|
+|![static_detect_test1] | ![static_detect_test3]|
 
 |test5.jpg | test6.jpg |
 |:-------------------------:|:-------------------------:|
 |![static_detect_test5] | ![static_detect_test6]|
+
+To better improve the performance of my classifier, I thresholded the confidence to reduce false positives.
+As an investigation, I took two subclips of video time clips 0-5 and 7-15.
+In the 0-5 time clip, there is open road without any cars.
+My classifier generated many false positives in the center of the road.
+In the 7-15 clip, the white car was driving, and my classifier detected it effectively.
+
+For both clips, I ran my classifier and collected two lists for each run:
+-The prediction confidence values for each window classified as a vehicle.
+-The prediction confidence values for each window classified as a non-vehicle.
+
+Here are graphs for each:
+
+| Subclip 0-5 (all road - false positives) | Subclip 0-5 (all road - 'correct' negative classification) |
+|:-------------------------:|:-------------------------:|
+|![sub_clip_0_5_car_classified_yes_confidence] | ![sub_clip_0_5_car_classified_no_confidence]|
+
+| Subclip 7-15 (mostly cars - 'correct' positive classification)| Subclip 7-15 (Mostly Cars - 'correct' negative classification) |
+|:-------------------------:|:-------------------------:|
+|![sub_clip_7_15_car_classified_yes_confidence] | ![sub_clip_7_15_car_classified_no_confidence]|
+
+Observe the two figures on the left.  These figures both show a exponential-like distribution.
+Note that for the 0-5 subclip, The maximum prediction confidence is just below 2.5.
+That means for this road section, the false positive classifications for the road did not have a prediction confidence above 2.5.
+
+Also observe that the maximum confidence for the 7-15 subclip is 6.5.
+In general, the distribution is shifted farther to the right, indicating that the classifier many time is has a higher confidence associated with a car image.
+
+Do note two things:
+* The histogram of all road has much fewer samples (Above 100), whereas the histogram of mostly cars has many more samples (many thousand).
+* The distributions of confidence in classifications for each case (car and non-car) have significant overlap.
+In fact the majority of classifications for either group are below 1.5.
+This means that it most likely not be possible to determine whether the positive classification is a road or car based on the confidence.
+This does not mean that it does not help.  I list several thresholding values below.
+
+I tried out several threshold levels:
+* 1.0: This did a great job of getting rid of the false positives.
+It completely removed the false positives from the beginning of the video, where there is a discoloration in the pavement.
+However, there was a problem detecting the white car where it went over the bright pavement.
+The detection of the white car dropped out for several seconds in that area.
+Also, there was a problem detecting the black car as it went towards the horizon.
+(That may have been more of an issue because I omited the small windows on the horizon for that run).
+
+* 0.75 //TODO
+
+* 0.5: This level did a great job of detecting the cars, but had several cases of false positives.
+This is especially true in the beginning of the video where the discoloration in the road color triggered the false positives.
+
+* 0.35: This did a good job of detecting the cars, but also had the same false positives as the 0.5 threshold.
+
 
 ---
 
@@ -174,6 +237,30 @@ Here's a [link to my video result](./project_video.mp4)
 
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
+
+For each Frame, I created a heatmap.
+For each window that triggered, the pixels of the heatmap of the corresponding bounding box were incremented by one.
+
+| RGB Image test2.jpg | Heat Map test2.png |
+|:-------------------------:|:-------------------------:|
+|![rgb_img_test2] | ![heat_map_img_test2]|
+
+| RGB Image test3.jpg | Heat Map test3.png |
+|:-------------------------:|:-------------------------:|
+|![rgb_img_test3] | ![heat_map_img_test3]|
+
+| RGB Image test6.jpg | Heat Map test6.png |
+|:-------------------------:|:-------------------------:|
+|![rgb_img_test6] | ![heat_map_img_test6]|
+
+
+
+
+
+
+
+
+
 
 I recorded the positions of positive detections in each frame of the video.
 From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.
