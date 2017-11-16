@@ -241,6 +241,8 @@ Here's a [link to my video result](./project_video.mp4)
 For each Frame, I created a heatmap.
 For each window that triggered, the pixels of the heatmap of the corresponding bounding box were incremented by one.
 
+Here are images with their corresponding heat maps: (Note that no averaging takes place in these heat maps).
+
 | RGB Image test2.jpg | Heat Map test2.png |
 |:-------------------------:|:-------------------------:|
 |![rgb_img_test2] | ![heat_map_img_test2]|
@@ -253,6 +255,24 @@ For each window that triggered, the pixels of the heatmap of the corresponding b
 |:-------------------------:|:-------------------------:|
 |![rgb_img_test6] | ![heat_map_img_test6]|
 
+I used this as a way to combine the results of the overlapping classified windows.
+To make the detection more robust, I pixelwise summed the heatmaps by 5 frames and then averaged each pixel value by the number of frames.
+This entailed storing 5 frames worth of heat maps.  I stored this as a member variable in a custom History object (located in filtering/history.py)
+I then applied a threshold of two, meaning for a pixel to be stuck on the heat map, it must be triggered by at least two windows for 5 frames in a row.
+I then used the `scipy.ndimage.measurements.label()` method on the averaged heat map to detect the car regions.
+
+As one further step of robustness, I also kept track of the centroids for each frame.
+For example, the previous frame could have contained 3 centroids.
+The current frame could contain two centroids, and so on.
+The filtering process is the following: 
+- If a candidate label is generated, its centroid is computed.   
+- If the centroid is less than 150 pixels for a centroid for a frame for 3 out of the previous 5 frames, 
+it is considered legitimate and its labels is allowed to be entered into the heat map.
+
+This extra step helped filter out false positives when I tried it.
+However, I had not tried the heat map averaging without this step, so I do not know if the heat map averaging is good enough to make this step unnecessary.
+
+TODO - show labels on the heatmaps, and labels on the images.
 
 
 
