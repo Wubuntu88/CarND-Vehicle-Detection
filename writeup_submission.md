@@ -132,6 +132,8 @@ Here are my parameters:
 As for the number of orientations, I believe 9 yields enough granularity for the histogram of the gradients.
 Creating more orientations would most likely achieve diminishing returns.
 
+As for the pixels per cell and cells per block, the values chosen seem to cover enough area to give a good indication of the gradient at that location.
+
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
 I trained a linear SVM using the default parameters in sklearn (C = 1.0).
