@@ -384,3 +384,7 @@ This would allow us to better choose a cutoff confidence threshold for deciding 
 * Using Udacity's training data of cars would bring additional training data for the classifier.
 
 Using these techniques, I can improve my vehicle tracking for the future.
+
+--
+
+To see where I execute my code, check this [link](./notebooks/video_test.ipynb)
