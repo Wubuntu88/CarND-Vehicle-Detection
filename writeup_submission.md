@@ -43,9 +43,19 @@ The goals / steps of this project are the following:
 [rgb_img_test3]: ./test_images/test3.jpg
 [rgb_img_test6]: ./test_images/test6.jpg
 
-[heat_map_img_test2]: ./output_images/heat_maps/test2.png
+[heat_map_img_test1]: ./output_images/heat_maps/test1.png
 [heat_map_img_test3]: ./output_images/heat_maps/test3.png
 [heat_map_img_test6]: ./output_images/heat_maps/test6.png
+
+[label_on_heat_map_img_test1]: ./output_images/labels_on_heat_maps/test1.png
+[label_on_heat_map_img_test3]: ./output_images/labels_on_heat_maps/test3.png
+[label_on_heat_map_img_test6]: ./output_images/labels_on_heat_maps/test6.png
+
+[label_on_img_test1]: ./output_images/labels_on_images/test1.png
+[label_on_img_test3]: ./output_images/labels_on_images/test3.png
+[label_on_img_test6]: ./output_images/labels_on_images/test6.png
+
+
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
@@ -220,7 +230,9 @@ The detection of the white car dropped out for several seconds in that area.
 Also, there was a problem detecting the black car as it went towards the horizon.
 (That may have been more of an issue because I omited the small windows on the horizon for that run).
 
-* 0.75 //TODO
+* 0.75: This level did a good job of eliminating false positives, but had sections where the white car dropped out on bright pavement.
+
+* 0.65: A good balance between eliminating false positives and not having cars drop out.
 
 * 0.5: This level did a great job of detecting the cars, but had several cases of false positives.
 This is especially true in the beginning of the video where the discoloration in the road color triggered the false positives.
@@ -241,11 +253,11 @@ Here's a [link to my video result](./project_video.mp4)
 For each Frame, I created a heatmap.
 For each window that triggered, the pixels of the heatmap of the corresponding bounding box were incremented by one.
 
-Here are images with their corresponding heat maps: (Note that no averaging takes place in these heat maps).
+Here are images with their corresponding heat maps: (Note that no averaging takes place in these heat maps - but averaging did occur im my video).
 
 | RGB Image test2.jpg | Heat Map test2.png |
 |:-------------------------:|:-------------------------:|
-|![rgb_img_test2] | ![heat_map_img_test2]|
+|![rgb_img_test2] | ![heat_map_img_test1]|
 
 | RGB Image test3.jpg | Heat Map test3.png |
 |:-------------------------:|:-------------------------:|
@@ -260,6 +272,7 @@ To make the detection more robust, I pixelwise summed the heatmaps by 5 frames a
 This entailed storing 5 frames worth of heat maps.  I stored this as a member variable in a custom History object (located in filtering/history.py)
 I then applied a threshold of two, meaning for a pixel to be stuck on the heat map, it must be triggered by at least two windows for 5 frames in a row.
 I then used the `scipy.ndimage.measurements.label()` method on the averaged heat map to detect the car regions.
+This was the most impactful filtering technique I performed.
 
 As one further step of robustness, I also kept track of the centroids for each frame.
 For example, the previous frame could have contained 3 centroids.
@@ -270,36 +283,40 @@ The filtering process is the following:
 it is considered legitimate and its labels is allowed to be entered into the heat map.
 
 This extra step helped filter out false positives when I tried it.
-However, I had not tried the heat map averaging without this step, so I do not know if the heat map averaging is good enough to make this step unnecessary.
+However, I believe it caused some side effects where cars dropped out too much,
+especially when the black car went towards the horizon at the end of the video.
+For this reason, I decided to not include this part in my submission video.
 
 TODO - show labels on the heatmaps, and labels on the images.
 
+Here are some Images of the labels drawn on the heat maps (without frame averaging):
+(Note: the white outline makes the heat maps look less hot)
 
+| RGB Image test1.jpg | Label on Heat Map test1.png |
+|:-------------------------:|:-------------------------:|
+|![rgb_img_test1] | ![label_on_heat_map_img_test1]|
 
+| RGB Image test3.jpg | Label on Heat Map test3.png |
+|:-------------------------:|:-------------------------:|
+|![rgb_img_test3] | ![label_on_heat_map_img_test3]|
 
+| RGB Image test6.jpg | Label on Heat Map test6.png |
+|:-------------------------:|:-------------------------:|
+|![rgb_img_test6] | ![label_on_heat_map_img_test6]|
 
+And here are the images with the labels drawn on them:
 
+| RGB Image test1.jpg | Label on Image test1.png |
+|:-------------------------:|:-------------------------:|
+|![rgb_img_test1] | ![label_on_img_test1]|
 
+| RGB Image test3.jpg | Label Image test3.png |
+|:-------------------------:|:-------------------------:|
+|![rgb_img_test3] | ![label_on_img_test3]|
 
-
-I recorded the positions of positive detections in each frame of the video.
-From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.
-I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.
-I then assumed each blob corresponded to a vehicle.
-I constructed bounding boxes to cover the area of each blob detected.  
-
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
-
-### Here are six frames and their corresponding heatmaps:
-
-![alt text][image5]
-
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
-![alt text][image6]
-
-### Here the resulting bounding boxes are drawn onto the last frame in the series:
-![alt text][image7]
-
+| RGB Image test6.jpg | Label on Image test6.png |
+|:-------------------------:|:-------------------------:|
+|![rgb_img_test6] | ![label_on_img_test6]|
 
 
 ---
