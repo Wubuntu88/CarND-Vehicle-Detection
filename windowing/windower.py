@@ -21,8 +21,9 @@ def search_windows(img, windows, classifier, scaler):
         test_features = scaler.transform(np.array(features).reshape(1, -1))
         # Predict using your classifier
         prediction = classifier.predict(test_features)
+        prob = classifier.decision_function(test_features)
         # If positive (prediction == 1) then save the window
-        if prediction == 1:
+        if prediction == 1 and prob > 0.65:
             on_windows.append(window)
     # Return windows for positive detections
     return on_windows
