@@ -55,6 +55,7 @@ The goals / steps of this project are the following:
 [label_on_img_test3]: ./output_images/labels_on_images/test3.png
 [label_on_img_test6]: ./output_images/labels_on_images/test6.png
 
+[stubborn_false_positive]: ./output_images/_stubborn_false_positive/stubborn_false_positive.png
 
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
@@ -245,8 +246,14 @@ This is especially true in the beginning of the video where the discoloration in
 ### Video Implementation
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./project_video.mp4)
 
+Here's a [link to my submission video](./output_videos/submission_video/project_video_avg_heat_maping_5_frames_with_small_windows_.65_to_.85_overlap_pred_conf_thresh=0.65_no_centroid.mp4)
+This video does a good job of rejecting false positives and keeping track of the cars.
+There is one instance where it does not get the car outlines correct when the black car moves in front of the white car.
+
+To see another example that handles the black car going in front of the white car better, look at this [link](./output_videos/test/z_pretty_good/project_video_avg_heat_maping_5_frames_with_prediction_confidence_thresh=0.5.mp4).
+
+To see the windows trigger without any filtering, check this out [no filtering](./output_videos/test/test_unfilt_long_1.mp4)
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
@@ -287,8 +294,6 @@ However, I believe it caused some side effects where cars dropped out too much,
 especially when the black car went towards the horizon at the end of the video.
 For this reason, I decided to not include this part in my submission video.
 
-TODO - show labels on the heatmaps, and labels on the images.
-
 Here are some Images of the labels drawn on the heat maps (without frame averaging):
 (Note: the white outline makes the heat maps look less hot)
 
@@ -325,5 +330,41 @@ And here are the images with the labels drawn on them:
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
 
+The issues I faced in this project had mostly to do with filtering.
+I had problems of too many false positives.
+In particular, I had a stubborn false positive problem where there were vehicle detections in the middle of the road.
+
+![stubborn_false_positive]
+
+To solve this issue, I did several things.  The most effective was to average the heat maps over several frames.
+I also tried a technique of keeping heat map sections only if they were close enough to several previous centroids.
+However, this did not seem to yield obvious benefits when used in conjunction with the heat map average.
+For the submission video, I excluded this part, but I believe it has potential if the distance parameter is tuned.
+
+Another solution to the false positive issue was to use the confidence prediction and use a threshold to classify a new window as an image.
+I tried many threshold levels from 0.25 to 1.0.
+In the case of 1.0, it did a good job of eliminating false positives, but generated too many false negatives in sequence, so the car label dropped out of too many frames.
+For cases of 0.3, 0.5, etc, They captured the cars well, but did not filter out the stubborn false positive.
+
+After much tweaking, I decided on a threshold value of 0.65.
+It excelled at removing false positives and false negatives, even though it had a peculiar behaviour when one car went in front of the other.
+
+I also experimented with many window sizes.  I found that an overlap of 0.65 to 0.85 was good.  More windows is probably better, but more windows takes longer.
+
+I can think of several cases where my pipeline may fail:
+* When there is discolored pavement, or bright pavement.
+* When confronted with shadows over several frames.  This is expecially true if the shadow has pockets in it, so that it has many strong gradients.
+* When a car travels in front of another.
+* When a car approaches the horizon; the horizon is not always consistent, and my small windows will not always be aligned well enough.
+
+To make the pipeline more robust I could do the following:
+* I could explore different classifiers, such as neural networks or decision trees.
+* Exploring other color spaces such as HSV, HSL, and LUV could provide better features for my classifier.
+* Getting better statistics about the confidence for when a car is classified as a car, and when a when a non car is classified as a car.
+This could be done on the leftover test data after the model has been trained.  A more difficult job would be to do it using the video.
+This would allow us to better choose a cutoff confidence threshold for deciding if a window should be classified as having a car in it.
+* tuning the centroid distance threshold over several frames could prove beneficial.
+* using Udacity's training data of cars would bring additional training data for the classifier.
+
+Using these techniques, I can improve my vehicle tracking in the future.
