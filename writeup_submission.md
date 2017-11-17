@@ -369,7 +369,7 @@ It excelled at removing false positives and false negatives, even though it had 
 I also experimented with many window sizes.  I found that an overlap of 0.65 to 0.85 was good.  More windows is probably better, but more windows takes longer.
 
 I can think of several cases where my pipeline may fail:
-* When there is discolored pavement, or bright pavement.
+* When there is discolored pavement, or bright pavement (especially when a white car is on bright pavement - there may not be enough gradients).
 * When confronted with shadows over several frames.  This is expecially true if the shadow has pockets in it, so that it has many strong gradients.
 * When a car travels in front of another.
 * When a car approaches the horizon; the horizon is not always consistent, and my small windows will not always be aligned well enough.
@@ -380,7 +380,7 @@ To make the pipeline more robust I could do the following:
 * Getting better statistics about the confidence for when a car is classified as a car, and when a when a non car is classified as a car.
 This could be done on the leftover test data after the model has been trained.  A more difficult job would be to do it using the video.
 This would allow us to better choose a cutoff confidence threshold for deciding if a window should be classified as having a car in it.
-* tuning the centroid distance threshold over several frames could prove beneficial.
-* using Udacity's training data of cars would bring additional training data for the classifier.
+* Tuning the centroid distance threshold over several frames could prove beneficial.
+* Using Udacity's training data of cars would bring additional training data for the classifier.
 
-Using these techniques, I can improve my vehicle tracking in the future.
+Using these techniques, I can improve my vehicle tracking for the future.
