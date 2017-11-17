@@ -253,6 +253,7 @@ This is especially true in the beginning of the video where the discoloration in
 
 * 0.35: This did a good job of detecting the cars, but also had the same false positives as the 0.5 threshold.
 
+As a side note: notice that the two plots on the left have normal-like distributions.  Very Cool.
 
 ---
 
@@ -270,7 +271,9 @@ To see the windows trigger without any filtering, check this out [no filtering](
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
-For each Frame, I created a heatmap.
+I perform my filtering in the filter_windows() method in the filtering/filter.py file.
+
+For each frame, I created a heatmap.
 For each window that triggered, the pixels of the heatmap of the corresponding bounding box were incremented by one.
 
 Here are images with their corresponding heat maps: (Note that no averaging takes place in these heat maps - but averaging did occur im my video).
