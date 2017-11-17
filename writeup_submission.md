@@ -189,7 +189,7 @@ With the large window size, I though I could afford the high overlap.
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-Here are some images of my pipeline locating cars in an image: (Note, I use filtering techniques that use several previous frames for )
+Here are some images of my pipeline locating cars in an image: (Note, I use filtering techniques that use several previous frames for robustness, but the filtering is not applied for these static images.)
 
 ##### Car detection without filtering
 
@@ -208,8 +208,8 @@ My classifier generated many false positives in the center of the road.
 In the 7-15 clip, the white car was driving, and my classifier detected it effectively.
 
 For both clips, I ran my classifier and collected two lists for each run:
--The prediction confidence values for each window classified as a vehicle.
--The prediction confidence values for each window classified as a non-vehicle.
+- The prediction confidence values for each window classified as a vehicle.
+- The prediction confidence values for each window classified as a non-vehicle.
 
 Here are graphs for each:
 
@@ -226,7 +226,8 @@ Note that for the 0-5 subclip, The maximum prediction confidence is just below 2
 That means for this road section, the false positive classifications for the road did not have a prediction confidence above 2.5.
 
 Also observe that the maximum confidence for the 7-15 subclip is 6.5.
-In general, the distribution is shifted farther to the right, indicating that the classifier many time is has a higher confidence associated with a car image.
+In general, the distribution is shifted farther to the right, 
+indicating that the classifier many time is has a higher confidence associated with a car image.
 
 Do note two things:
 * The histogram of all road has much fewer samples (Above 100), whereas the histogram of mostly cars has many more samples (many thousand).
