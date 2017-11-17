@@ -140,11 +140,17 @@ I trained a linear SVM using the default parameters in sklearn (C = 1.0).
 I trained on both the GIT and KTTI image data.
 This yielded an accuracy of around 99%.
 Because the accuracy was so good, I ended up keeping the first classifier I trained.
+The location in my code where I trained my classifier is in /Users/williamgillespie/Desktop/CarND-Vehicle-Detection/classification/svc_classify.py.
+I load the image data from .npy files (saved numpy arrays) because it is faster to load a numpy array with all of the images than to load the images as .png or jpg files.
+I created the .npy files in this location: data_loader/load_as_image_save_as_np_array.py.
 
 I used the following features to train my classifier:
 * Raw colors in the pixels as a 1-d feature vector (in feature_extraction/color_spatial.py)
 * RGB color histograms (in feature_extraction/color_histogram.py - I used the rgb method).
 * HOG features (in feature_extraction/hog_extractor.py).
+
+I scaled my features using the `StandardScaler().fit(x)` function.
+I saved my scaler and my SVM classifier to use elsewhere without having to train it again.
 
 ### Sliding Window Search
 
@@ -154,8 +160,12 @@ I used the first set of code from Udacity to implement my sliding window search.
 It is located in the windowing/windower.py file.
 I used the slide_window() to find all of my windows, then the search windows and decide if there is a car in that window.
 
+I chose these configurations to have small windows near the horizon, and generally bigger windows in the parts of the image close to the car.
+The idea is that the small windows will trigger for small cars near the horizon, and we will need larger windows for cars that appear larger.
+
 I decided on several window sizes: (64x64), (96x96), and (128x128).
 For the above window sizes, I chose the following configurations:
+
 ###### (64x64)
 - I chose y_start=400 and ystop=464.  
 This means that there was only one row of small windows and that was just below the horizon where one would imagine small cars to be.
