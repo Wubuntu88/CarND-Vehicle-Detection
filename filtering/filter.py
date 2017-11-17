@@ -76,6 +76,23 @@ def filter_windows(rgb_image, windows, history: h.History) -> Tuple[object, int]
 
     if labels[1] == 0:
         return np.zeros_like(labels[0]), 0
+    else:
+        return labels
+
+
+def filter_windows_using_centroid(rgb_image, windows, history: h.History) -> Tuple[object, int]:
+    heat_map = np.zeros_like(rgb_image[:, :, 0]).astype(np.float)
+    add_heat(heatmap=heat_map, bbox_list=windows)
+
+    history.add_or_replace_heat_map(heat_map=heat_map)
+    avg_heat_map = history.averaged_heatmap()
+
+    heat_map = apply_threshold(heatmap=avg_heat_map, threshold=2)
+
+    labels = label(heat_map)
+
+    if labels[1] == 0:
+        return np.zeros_like(labels[0]), 0
 
     centroids = compute_centroids_from_labels(labels=labels)
 

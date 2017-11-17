@@ -7,8 +7,8 @@ import filtering.filter as f
 
 svc = joblib.load('../../saved_models/svc_rgb_all.pkl')
 x_scaler = joblib.load('../../saved_models/x_scaler_rgb_all.pkl')
-
-bgr_image = cv2.imread(filename='../../test_images/test6.jpg')
+file_name = 'test1.jpg'
+bgr_image = cv2.imread(filename='../../test_images/' + file_name)
 rgb_image = cv2.cvtColor(src=bgr_image, code=cv2.COLOR_BGR2RGB)
 
 small_windows = w.slide_window(img=rgb_image, xy_window=[64, 64], y_start_stop=[400, 464], xy_overlap=[0.5, 0.5])
@@ -31,5 +31,6 @@ f.add_heat(heatmap=heat_map, bbox_list=all_windows)
 # window_img = w.draw_boxes(img=window_img, bboxes=triggered_windows_medium, color=(0, 64, 255), thick=6)
 # window_img = w.draw_boxes(img=window_img, bboxes=triggered_windows_large, color=(255, 255, 0), thick=6)
 #
+plt.title("Heat map for " + file_name, fontsize=18)
 plt.imshow(heat_map, cmap='hot')
 plt.show()
